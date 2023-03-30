@@ -37,36 +37,36 @@ data "aws_eks_cluster_auth" "this" {
 }
 
 module "irsa" {
-  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/irsa"
-  eks_cluster_id = var.cluster_name
-  eks_oidc_provider_arn = data.aws_iam_openid_connect_provider.this.arn
-  kubernetes_namespace = var.namespace
+  source                     = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/irsa"
+  eks_cluster_id             = var.cluster_name
+  eks_oidc_provider_arn      = data.aws_iam_openid_connect_provider.this.arn
+  kubernetes_namespace       = var.namespace
   kubernetes_service_account = var.service_account
-  irsa_iam_policies = ["arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"]
+  irsa_iam_policies          = ["arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"]
 }
 
 resource "helm_release" "containerinsights-logs" {
   name       = "containerinsights-logs"
-  repository = "${path.cwd}"
+  repository = path.cwd
   chart      = "containerinsights-logs"
 
-  values = [templatefile("${path.module}/containerinsights-values.yaml",{
-    namespace = var.namespace
+  values = [templatefile("${path.module}/containerinsights-values.yaml", {
+    namespace      = var.namespace
     serviceAccount = var.service_account
-    region = var.region
-    clusterName = var.cluster_name
+    region         = var.region
+    clusterName    = var.cluster_name
   })]
 }
 
 resource "helm_release" "containerinsights-metrics" {
   name       = "containerinsights-metrics"
-  repository = "${path.cwd}"
+  repository = path.cwd
   chart      = "containerinsights-metrics"
 
-  values = [templatefile("${path.module}/containerinsights-values.yaml",{
-    namespace = var.namespace
+  values = [templatefile("${path.module}/containerinsights-values.yaml", {
+    namespace      = var.namespace
     serviceAccount = var.service_account
-    region = var.region
-    clusterName = var.cluster_name
+    region         = var.region
+    clusterName    = var.cluster_name
   })]
 }
