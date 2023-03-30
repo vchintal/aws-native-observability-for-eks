@@ -1,0 +1,4 @@
+namespace: amazon-cloudwatch
+serviceAccount: fluent-bit-sa
+region: us-west-2
+clusterName: example

@@ -1,0 +1,4 @@
+namespace: ${namespace}
+serviceAccount: ${serviceAccount}
+region: ${region}
+clusterName: ${clusterName}
